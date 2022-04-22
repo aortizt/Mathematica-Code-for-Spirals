@@ -1,0 +1,97 @@
+Subsets[{1,2,3,4},{3}]
+{{1,2,3},{1,2,4},{1,3,4},{2,3,4}}
+a=2; b=5.9; d1=12.21;d2=12.1;
+xi1=.1401;
+xi2=.010405;
+xi3=.802045;
+xi4=.141592;
+visual3D={};
+i=0;
+(**)
+Do[ 
+ dxi1=(a * Sin[xi1]) * dt;
+ dxi2=(b * Cos[xi2]) * dt;
+ dxi3=(xi3 + xi2 - xi4 / d1) * dt;
+ dxi4=(Sin[xi4] * (xi3) + d2 * Sin[xi2 - xi1]) * dt;
+(**)
+AppendTo[visual3D,{dxi1, dxi2,dxi3}];
+(**)
+ xi1=dxi1; xi2=dxi2; xi3=dxi3; xi4=dxi4;
+i=i + 1,
+(*NEXT dt*)
+{dt , 0, .6862, .0001}];
+ListPointPlot3D[visual3D,AxesLabel->{"dxi1","dxi2","dxi3"},Boxed->False,ColorFunction->"Rainbow"]
+
+a=2; b=5.9; d1=10.21;d2=12.1;
+xi1=.1401;
+xi2=.010405;
+xi3=.802045;
+xi4=.141592;
+visual3D={};
+i=0;
+(**)
+Do[ 
+ dxi1=(a * Sin[xi1]) * dt;
+ dxi2=(b * Cos[xi2]) * dt;
+ dxi3=(xi3 + xi2 - xi4 / d1) * dt;
+ dxi4=(Sin[xi4] * (xi3) + d2 * Sin[xi2 - xi1]) * dt;
+(**)
+AppendTo[visual3D,{dxi1, dxi2,dxi4}];
+(**)
+ xi1=dxi1; xi2=dxi2; xi3=dxi3; xi4=dxi4;
+i=i + 1,
+(*NEXT dt*)
+{dt , 0, .6862, .0001}];
+ListPointPlot3D[visual3D,AxesLabel->{"dxi1","dxi2","dxi4"},Boxed->False,ColorFunction->"Rainbow"]
+
+a=2; b=5.9; d1=10.21;d2=12.1;
+xi1=.1401;
+xi2=.010405;
+xi3=.802045;
+xi4=.141592;
+visual3D={};
+i=0;
+(**)Do[ 
+ dxi1=(a * Sin[xi1]) * dt;
+ dxi2=(b * Cos[xi2]) * dt;
+ dxi3=(xi3 + xi2 - xi4 / d1) * dt;
+ dxi4=(Sin[xi4] * (xi3) + d2 * Sin[xi2 - xi1]) * dt;
+(**)
+AppendTo[visual3D,{dxi1, dxi3,dxi4}];
+(**)
+ xi1=dxi1; xi2=dxi2; xi3=dxi3; xi4=dxi4;
+i=i + 1,
+(*NEXT dt*)
+{dt , 0, .6862, .0001}];
+ListPointPlot3D[visual3D,AxesLabel->{"dxi1","dxi3","dxi4"},Boxed->False,ColorFunction->"Rainbow"]
+
+(********)
+a=2; b=5.9; d1=10.21;d2=12.1;
+xi1=.1401;
+xi2=.010405;
+xi3=.802045;
+xi4=.141592;
+visual3D={};
+i=0;
+(**)Do[ 
+ dxi1=(a * Sin[xi1]) * dt;
+ dxi2=(b * Cos[xi2]) * dt;
+ dxi3=(xi3 + xi2 - xi4 / d1) * dt;
+ dxi4=(Sin[xi4] * (xi3) + d2 * Sin[xi2 - xi1]) * dt;
+(**)
+AppendTo[visual3D,{dxi2, dxi3,dxi4}];
+(**)
+ xi1=dxi1; xi2=dxi2; xi3=dxi3; xi4=dxi4;
+i=i + 1,
+(*NEXT dt*)
+{dt , 0, .6862, .0001}];
+ListPointPlot3D[visual3D,AxesLabel->{"dxi2","dxi3","dxi4"},Boxed->False,ColorFunction->"Rainbow"]
+
+(*****)
+f[a_][x_]:=a*x-1.19 x^3;
+cps[a_]=x/.Quiet[Solve[D[f[a][x],x]==0,x],Solve::ratnz]
+{-0.748481,0.748481}
+criticalOrbits[a_,cp_]:=Module[{try},If[Head[cp]===Real,try=NestWhileList[f[a],cp,Abs[#]<100&,1,500];
+If[Abs[Last[try]]>=100,try={},try=Drop[{a,#}&/@try,100]],{}]];
+points[k_]:=Partition[Flatten[Table[criticalOrbits[a,cps[a][[k]]],{a,-2,4,0.002}]],2]
+Graphics[{Opacity[0.02],PointSize[0.002],Table[{ColorData[1,k],Point[points[k]]},{k,1,Length[cps[a]]}]},Frame->True]
